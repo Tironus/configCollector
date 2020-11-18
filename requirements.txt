@@ -9,3 +9,5 @@ paramiko
 fastapi
 uvicorn
 pydantic
+requests
+ipaddress
