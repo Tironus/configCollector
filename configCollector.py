@@ -59,10 +59,10 @@ class configCollector():
                     if 'edit' in intf:
                         list_ref = output[interface_output_start:]
                         port_id = intf.split('"')[1]
-                        for id in range(i, i + 10):
-                            if 'set ip ' in list_ref[id]:
-                                ip = list_ref[id].split(' ')[2]
-                                netmask = list_ref[id].split(' ')[3]
+                        for idx_id in range(i, i + 10):
+                            if 'set ip ' in list_ref[idx_id]:
+                                ip = list_ref[idx_id].split(' ')[2]
+                                netmask = list_ref[idx_id].split(' ')[3]
                                 pfx_len = ipaddress.IPv4Network(f'0.0.0.0/{netmask}').prefixlen
                                 interface_entity = models.InterfaceParams(id=port_id, ipv4_address=ip, ipv4_prefix_len=pfx_len)
                                 intf_entities.append(interface_entity)
@@ -77,17 +77,17 @@ class configCollector():
                     if 'edit' in sr:
                         list_ref = output[sr_output_start:]
                         sr_id = sr.split(' ')[1]
-                        for id in range(i, i + 15):
-                            if 'set dst ' in list_ref[id]:
-                                network = list_ref[id].split(' ')[2]
-                                netmask = list_ref[id].split(' ')[3]
+                        for idx_id in range(i, i + 15):
+                            if 'set dst ' in list_ref[idx_id]:
+                                network = list_ref[idx_id].split(' ')[2]
+                                netmask = list_ref[idx_id].split(' ')[3]
                                 pfx_len = ipaddress.IPv4Network(f'0.0.0.0/{netmask}').prefixlen
 
-                            if 'set gateway ' in list_ref[id]:
-                                gw_ip = list_ref[id].split(' ')[2]
+                            if 'set gateway ' in list_ref[idx_id]:
+                                gw_ip = list_ref[idx_id].split(' ')[2]
 
-                            if 'set device ' in list_ref[id]:
-                                device = list_ref[id].split('"')[1]
+                            if 'set device ' in list_ref[idx_id]:
+                                device = list_ref[idx_id].split('"')[1]
 
                         if network and netmask and pfx_len and gw_ip and device:
                             sr_entity = models.StaticRouteParams(
