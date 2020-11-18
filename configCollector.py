@@ -175,7 +175,7 @@ class configCollector():
                 headers=headers,
                 data=json.dumps(device_diff)
             )
-            return {"status": r.status_code}, "success", r.text
+            return {"status": r.status_code}, "success", msg
         elif status == "noop":
             return {}, "noop", "no updates required"
         else:
