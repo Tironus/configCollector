@@ -1,5 +1,5 @@
 from deviceCommander import DeviceConfig
-import collectorGenerator
+from collectorGenerator import collectorGenerator
 from models import InterfaceParams, StaticRouteParams, InterfaceValues, StaticRouteValues, DeviceAuth, Device
 import ipaddress
 import os
@@ -31,7 +31,7 @@ class configCollector():
             self.device_data['device']['password'],
         )
 
-        cg_data = collectorGenerator.collectorGenerator(self.device_data)
+        cg_data = collectorGenerator(self.device_data)
         cmds = cg_data.generateCommands()
         try:
             d.runCommands(cmds)
