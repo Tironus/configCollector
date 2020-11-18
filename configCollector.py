@@ -6,7 +6,6 @@ import os
 import requests
 import json
 
-
 class configCollector():
     def __init__(self, device_data):
         os.environ["CONFIG_COMMANDER"] = "192.168.20.241"
