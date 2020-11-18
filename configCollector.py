@@ -1,6 +1,6 @@
 from deviceCommander import DeviceConfig
 import collectorGenerator
-import models
+from models import InterfaceParams, StaticRouteParams, InterfaceValues, StaticRouteValues, DeviceAuth, Device
 import ipaddress
 import os
 import requests
@@ -64,7 +64,7 @@ class configCollector():
                                 ip = list_ref[idx_id].split(' ')[2]
                                 netmask = list_ref[idx_id].split(' ')[3]
                                 pfx_len = ipaddress.IPv4Network(f'0.0.0.0/{netmask}').prefixlen
-                                interface_entity = models.InterfaceParams(id=port_id, ipv4_address=ip, ipv4_prefix_len=pfx_len)
+                                interface_entity = InterfaceParams(id=port_id, ipv4_address=ip, ipv4_prefix_len=pfx_len)
                                 intf_entities.append(interface_entity)
                                 continue
                     if 'next' in intf:
@@ -90,7 +90,7 @@ class configCollector():
                                 device = list_ref[idx_id].split('"')[1]
 
                         if network and netmask and pfx_len and gw_ip and device:
-                            sr_entity = models.StaticRouteParams(
+                            sr_entity = StaticRouteParams(
                                 id=sr_id,
                                 dst_ip=network,
                                 dst_prefix_len=pfx_len,
@@ -143,15 +143,15 @@ class configCollector():
             sr_val = []
             update_config = []
             if len(interfaces_to_update) > 0:
-                intf_val = models.InterfaceValues(interfaces=interfaces_to_update)
+                intf_val = InterfaceValues(interfaces=interfaces_to_update)
                 update_config.append(intf_val)
             if len(srs_to_update) > 0:
-                sr_val = models.StaticRouteValues(static_routes=srs_to_update)
+                sr_val = StaticRouteValues(static_routes=srs_to_update)
                 update_config.append(sr_val)
 
             print(update_config)
             if len(update_config) > 0:
-                device_auth = models.DeviceAuth(
+                device_auth = DeviceAuth(
                     hostname=self.device_data["device"]["hostname"],
                     username=self.device_data["device"]["username"],
                     password=self.device_data["device"]["password"],
@@ -159,7 +159,7 @@ class configCollector():
                     firmware_version=self.device_data["device"]["firmware_version"],
                     configuration=update_config
                 )
-                device = models.Device(device=device_auth)
+                device = Device(device=device_auth)
                 return device.dict(), "success", "updates found"
             else:
                 return {}, "failed", "empty configuration list"
