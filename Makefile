@@ -6,7 +6,7 @@ install:
 lint:
 	pylint --disable=C,R,E1120,E0401 collectorGenerator.py
 	pylint --disable=C,R,E1120,E0401 configCollector.py
-	pylint --disable=C,R,E1120,E0401 deviceCommander.py
+	pylint --disable=C,R,E1120,E0401,W0612 deviceCommander.py
 
 all:
 	install lint
