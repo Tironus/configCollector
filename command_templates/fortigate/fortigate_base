@@ -1,9 +1,9 @@
 config vdom
 edit root
 {% if params.interface == True %}
-show system interface
+show full system interface
 {% endif %}
 {% if params.static_routes == True %}
-show router static
+show full router static
 {% endif %}
 end
