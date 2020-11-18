@@ -4,11 +4,11 @@ ENV         container docker
 
 RUN         apt update && \
             apt install -y build-essential python3 python3-pip git && \
-            git clone https://github.com/Tironus/configCommander.git && \
-            cd ./configCommander && \
+            git clone https://github.com/Tironus/configCollector.git && \
+            cd ./configCollector && \
             make install && \
-            cd config_commander_api
+            cd config_collector_api
 
-EXPOSE      8000/tcp
+EXPOSE      8001/tcp
 
-CMD         cd /configCommander/config_commander_api && uvicorn configCommanderAPI:app --host 0.0.0.0 --reload
+CMD         cd /configCollector/config_collector_api && uvicorn configCollectorAPI:app --host 0.0.0.0 --port 8001 --reload

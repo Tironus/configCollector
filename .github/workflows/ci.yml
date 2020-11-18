@@ -19,3 +19,15 @@ jobs:
     - name: Lint with pylint
       run: |
         make lint
+    - name: docker login
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+    - name: docker build
+      run: |
+        docker build ./docker -t tgionfriddo/config_collector:latest
+    - name: docker push
+      run: |
+        docker push tgionfriddo/config_collector:latest
