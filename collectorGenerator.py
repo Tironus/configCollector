@@ -31,11 +31,12 @@ class collectorGenerator():
 		if self.device_data["device"]["device_type"] == "fortigate":
 			template = env.get_template("fortigate_base")
 
-			if "interfaces" in self.device_data["device"]["configuration"].keys():
-				params["interface"] = True
+			for cfg in self.device_data["device"]["configuration"]:
+				if "interfaces" in cfg.keys():
+					params["interface"] = True
 
-			if "static_routes" in self.device_data["device"]["configuration"].keys():
-				params["static_routes"] = True
+				if "static_routes" in cfg.keys():
+					params["static_routes"] = True
 
 			command_list.append(template.render(params=params))
 
@@ -48,5 +49,6 @@ class collectorGenerator():
 		if self.device_data['device']['device_type'] == 'fortigate':
 			template_path = f"{app_dir}/command_templates/fortigate"
 			self.get_config(template_path)
+
 
 		return self.commands

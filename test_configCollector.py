@@ -1,8 +1,8 @@
 import configCollector
 import os
 
-os.environ["CONFIG_COMMANDER"] = "192.168.20.241"
-os.environ["CONFIG_COMMANDER_PORT"] = "31081"
+os.environ["CONFIG_COMMANDER"] = "192.168.20.240"
+os.environ["CONFIG_COMMANDER_PORT"] = "8000"
 payload = {
     "device": {
         "hostname": "192.168.20.55",
@@ -10,7 +10,7 @@ payload = {
         "password": "admin",
         "device_type": "fortigate",
         "firmware_version": "5.6.4",
-        "configuration": {
+        "configuration": [{
             "interfaces": [
                 {
                     "id": "port5",
@@ -24,34 +24,35 @@ payload = {
                 },
                 {
                     "id": "port7",
-                    "ipv4_address": "192.168.82.7",
+                    "ipv4_address": "192.168.7.7",
                     "ipv4_prefix_len": 24
                 }
-            ],
+            ]},
+            {
             "static_routes": [
                 {
                     "id": "100",
-                    "dst_ip": "10.10.52.0",
+                    "dst_ip": "10.10.10.0",
                     "dst_prefix_len": 24,
                     "device": "port5",
                     "gateway": "192.168.5.50"
                 },
                 {
                     "id": "101",
-                    "dst_ip": "11.11.4.0",
+                    "dst_ip": "11.11.11.0",
                     "dst_prefix_len": 24,
                     "device": "port6",
                     "gateway": "192.168.6.60"
                 },
                 {
                     "id": "102",
-                    "dst_ip": "12.12.35.0",
+                    "dst_ip": "12.12.12.0",
                     "dst_prefix_len": 24,
                     "device": "port7",
                     "gateway": "192.168.7.70"
                 }
-            ]
-        }
+            ]}
+        ]
     }
 }
 

@@ -41,3 +41,14 @@ class DeviceAuth(BaseModel):
 
 class Device(BaseModel):
     device: DeviceAuth
+
+
+class ConfigResponse(BaseModel):
+    results: Dict
+    status: str
+    msg: Optional[str]
+
+
+class HealthResponse(BaseModel):
+    status: str
+    msg: Optional[str]

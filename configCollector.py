@@ -59,7 +59,7 @@ class configCollector():
 					if 'edit' in intf:
 						list_ref = output[interface_output_start:]
 						port_id = intf.split('"')[1]
-						for id in range(i, i + 75):
+						for id in range(i, i + 10):
 							if 'set ip ' in list_ref[id]:
 								ip = list_ref[id].split(' ')[2]
 								netmask = list_ref[id].split(' ')[3]
@@ -106,31 +106,36 @@ class configCollector():
 
 		for entity in intf_entities:
 			entity_dict = entity.dict()
-			for intf in self.device_data["device"]["configuration"]["interfaces"]:
-				if entity_dict["id"] == intf["id"]:
-					if entity_dict["ipv4_address"] != intf["ipv4_address"] or \
-							entity_dict["ipv4_prefix_len"] != intf["ipv4_prefix_len"]:
+			for cfg in self.device_data["device"]["configuration"]:
+				if 'interfaces' in cfg.keys():
+					for intf in cfg["interfaces"]:
+						if entity_dict["id"] == intf["id"]:
+							if entity_dict["ipv4_address"] != intf["ipv4_address"] or \
+									entity_dict["ipv4_prefix_len"] != intf["ipv4_prefix_len"]:
 
-						entity.ipv4_address = intf["ipv4_address"]
-						entity.ipv4_prefix_len = intf["ipv4_prefix_len"]
-						interfaces_to_update.append(entity)
-						continue
+								entity.ipv4_address = intf["ipv4_address"]
+								entity.ipv4_prefix_len = intf["ipv4_prefix_len"]
+								interfaces_to_update.append(entity)
+								continue
 
 		for entity in sr_entities:
 			entity_dict = entity.dict()
-			for sr in self.device_data["device"]["configuration"]["static_routes"]:
-				if entity_dict["id"] == sr["id"]:
-					if entity_dict["dst_ip"] != sr["dst_ip"] or \
-						entity_dict["dst_prefix_len"] != sr["dst_prefix_len"] or \
-						entity_dict["device"] != sr["device"] or \
-						entity_dict["gateway"] != sr["gateway"]:
+			for cfg in self.device_data["device"]["configuration"]:
+				if 'static_routes' in cfg.keys():
 
-						entity.dst_ip = sr["dst_ip"]
-						entity.dst_prefix_len = sr["dst_prefix_len"]
-						entity.gateway = sr["gateway"]
-						entity.device = sr["device"]
-						srs_to_update.append(entity)
-						continue
+					for sr in cfg["static_routes"]:
+						if entity_dict["id"] == sr["id"]:
+							if entity_dict["dst_ip"] != sr["dst_ip"] or \
+								entity_dict["dst_prefix_len"] != sr["dst_prefix_len"] or \
+								entity_dict["device"] != sr["device"] or \
+								entity_dict["gateway"] != sr["gateway"]:
+
+								entity.dst_ip = sr["dst_ip"]
+								entity.dst_prefix_len = sr["dst_prefix_len"]
+								entity.gateway = sr["gateway"]
+								entity.device = sr["device"]
+								srs_to_update.append(entity)
+								continue
 
 		entities_to_update = interfaces_to_update + srs_to_update
 		if len(entities_to_update) > 0:
@@ -144,6 +149,7 @@ class configCollector():
 				sr_val = models.StaticRouteValues(static_routes=srs_to_update)
 				update_config.append(sr_val)
 
+			print(update_config)
 			if len(update_config) > 0:
 				device_auth = models.DeviceAuth(
 					hostname=self.device_data["device"]["hostname"],
@@ -170,8 +176,8 @@ class configCollector():
 				headers=headers,
 				data=json.dumps(device_diff)
 			)
-			return r.status_code, "success", r.text
+			return {"status": r.status_code}, "success", r.text
 		elif status == "noop":
-			return "noop", "success", "no updates required"
+			return {}, "noop", "no updates required"
 		else:
-			return "fail", "failed", "process_config_diff failed"
+			return {}, "failed", "process_config_diff failed"
