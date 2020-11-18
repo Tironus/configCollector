@@ -3,6 +3,7 @@ from jinja2 import Environment, FileSystemLoader
 
 
 class collectorGenerator():
+
 	def __init__(self, device_data):
 		if isinstance(device_data, dict):
 			self.device_data = device_data
@@ -22,7 +23,6 @@ class collectorGenerator():
 		params["interface"] = False
 
 		command_list = []
-		template_name = None
 
 		file_loader = FileSystemLoader(template_path)
 		env = Environment(loader=file_loader, keep_trailing_newline=True, trim_blocks=True)
