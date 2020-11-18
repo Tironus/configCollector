@@ -1,6 +1,7 @@
 import os
 from jinja2 import Environment, FileSystemLoader
 
+
 class collectorGenerator():
 	def __init__(self, device_data):
 		if isinstance(device_data, dict):
