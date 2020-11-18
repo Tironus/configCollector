@@ -31,21 +31,21 @@ payload = {
             "static_routes": [
                 {
                     "id": "100",
-                    "dst_ip": "10.10.10.0",
+                    "dst_ip": "10.10.5.0",
                     "dst_prefix_len": 24,
                     "device": "port5",
                     "gateway": "192.168.5.50"
                 },
                 {
                     "id": "101",
-                    "dst_ip": "11.11.11.0",
+                    "dst_ip": "11.11.4.0",
                     "dst_prefix_len": 24,
                     "device": "port6",
                     "gateway": "192.168.6.60"
                 },
                 {
                     "id": "102",
-                    "dst_ip": "12.12.12.0",
+                    "dst_ip": "12.12.35.0",
                     "dst_prefix_len": 24,
                     "device": "port7",
                     "gateway": "192.168.7.70"

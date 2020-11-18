@@ -16,7 +16,7 @@ class InterfaceValues(BaseModel):
 class StaticRouteParams(BaseModel):
     id: str
     dst_ip: str
-    dst_prefix_len: str
+    dst_prefix_len: int
     device: str
     gateway: str
 
@@ -31,10 +31,10 @@ class DeviceAuth(BaseModel):
     password: str
     device_type: str
     firmware_version: str
-    configuration: Optional[
+    configuration: List[
         Union[
-            InterfaceValues,
-            StaticRouteValues
+            Optional[InterfaceValues],
+            Optional[StaticRouteValues]
         ]
     ]
 
