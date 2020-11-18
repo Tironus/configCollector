@@ -1,8 +1,8 @@
 import configCollector
 import os
 
-os.environ["CONFIG_COMMANDER"] = "192.168.20.240"
-os.environ["CONFIG_COMMANDER_PORT"] = "8000"
+os.environ["CONFIG_COMMANDER"] = "192.168.20.241"
+os.environ["CONFIG_COMMANDER_PORT"] = "31081"
 payload = {
     "device": {
         "hostname": "192.168.20.55",
