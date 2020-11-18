@@ -144,7 +144,6 @@ class configCollector():
 				sr_val = models.StaticRouteValues(static_routes=srs_to_update)
 				update_config.append(sr_val)
 
-
 			if len(update_config) > 0:
 				device_auth = models.DeviceAuth(
 					hostname=self.device_data["device"]["hostname"],
