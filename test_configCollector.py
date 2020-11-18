@@ -24,14 +24,14 @@ payload = {
                 },
                 {
                     "id": "port7",
-                    "ipv4_address": "192.168.8.7",
+                    "ipv4_address": "192.168.81.7",
                     "ipv4_prefix_len": 24
                 }
             ],
             "static_routes": [
                 {
                     "id": "100",
-                    "dst_ip": "10.10.5.0",
+                    "dst_ip": "10.10.51.0",
                     "dst_prefix_len": 24,
                     "device": "port5",
                     "gateway": "192.168.5.50"

@@ -9,8 +9,8 @@ import json
 
 class configCollector():
 	def __init__(self, device_data):
-		os.environ["CONFIG_COMMANDER"] = "192.168.20.240"
-		os.environ["CONFIG_COMMANDER_PORT"] = "8000"
+		os.environ["CONFIG_COMMANDER"] = "192.168.20.241"
+		os.environ["CONFIG_COMMANDER_PORT"] = "31081"
 
 		if isinstance(device_data, dict):
 			self.device_data = device_data
