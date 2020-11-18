@@ -1,6 +1,8 @@
 FROM        docker.io/ubuntu:latest
 
 ENV         container docker
+ENV         CONFIG_COMMANDER=ccommander
+ENV         CONFIG_COMMANDER_PORT=31083
 
 RUN         apt update && \
             apt install -y build-essential python3 python3-pip git && \
