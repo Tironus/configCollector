@@ -46,7 +46,12 @@ class Device(BaseModel):
 class ConfigResponse(BaseModel):
     results: Dict
     status: str
-    msg: Optional[str]
+    msg: Optional[
+        Union[
+            str,
+            Dict[str, str]
+        ]
+    ]
 
 
 class HealthResponse(BaseModel):
