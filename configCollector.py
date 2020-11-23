@@ -5,11 +5,14 @@ import ipaddress
 import os
 import requests
 import json
+from configDb import redis_client
 
 class configCollector():
     def __init__(self, device_data):
         os.environ["CONFIG_COMMANDER"] = "192.168.20.241"
         os.environ["CONFIG_COMMANDER_PORT"] = "31081"
+        os.environ["REDIS_IP"] = "192.168.20.241"
+        os.environ["REDIS_PORT"] = "31082"
 
         if isinstance(device_data, dict):
             self.device_data = device_data
@@ -168,6 +171,8 @@ class configCollector():
     def process_config_diff(self):
         device_diff, status, msg = self.getConfig()
         headers = {"Content-Type": "application/json"}
+        redis_ip = os.getenv("REDIS_IP")
+        redis_port = os.getenv("REDIS_PORT")
 
         if status == "success":
             r = requests.post(
@@ -175,7 +180,12 @@ class configCollector():
                 headers=headers,
                 data=json.dumps(device_diff)
             )
-            return {"status": r.status_code}, "success", {"message": msg, "device_output": r.text}
+            r_client = redis_client(redis_ip, redis_port)
+            result = r_client.save_dict(device_diff["device"]["hostname"], device_diff)
+            if result is True:
+                return {"status": r.status_code}, "success", {"message": msg, "device_output": r.text}
+            else:
+                return {"status": "redis failure"}, "failed", {"message": "redis failed to save the config data"}
         elif status == "noop":
             return {}, "noop", "no updates required"
         else:
