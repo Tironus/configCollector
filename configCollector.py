@@ -39,7 +39,7 @@ class configCollector():
         try:
             d.runCommands(cmds)
         except Exception:  # pylint: disable=broad-except
-            return "device error", "failed", "failed to connect to device."
+            return "device error", "failed", "failed to connect to device.", None
 
         for result in d.cmd_results:
             if d.cmd_results[result]['submit_config_result'] != 'success':
