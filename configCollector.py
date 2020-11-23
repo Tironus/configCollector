@@ -203,10 +203,6 @@ class configCollector():
 
             return {"status code": r.status_code}, "success", r.text
         elif status == "noop":
-            result = r_client.save_dict(full_config["device"]["hostname"], full_config)
-
-            if result is not True:
-                return {"status": "redis failure"}, "failed", {"message": "redis failed to save the config data"}
             return {}, "noop", "no updates required"
         else:
             return {}, "failed", "process_config_diff failed"
