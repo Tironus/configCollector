@@ -189,10 +189,6 @@ class configCollector():
         redis_ip = os.getenv("REDIS_IP")
         redis_port = os.getenv("REDIS_PORT")
         r_client = redis_client(redis_ip, redis_port)
-        result = r_client.save_dict(full_config["device"]["hostname"], full_config)
-
-        if result is not True:
-            return {"status": "redis failure"}, "failed", {"message": "redis failed to save the config data"}
 
         if status == "success":
             r = requests.post(
@@ -200,8 +196,17 @@ class configCollector():
                 headers=headers,
                 data=json.dumps(device_diff)
             )
+            result = r_client.save_dict(full_config["device"]["hostname"], full_config)
+
+            if result is not True:
+                return {"status": "redis failure"}, "failed", {"message": "redis failed to save the config data"}
+
             return {"status code": r.status_code}, "success", r.text
         elif status == "noop":
+            result = r_client.save_dict(full_config["device"]["hostname"], full_config)
+
+            if result is not True:
+                return {"status": "redis failure"}, "failed", {"message": "redis failed to save the config data"}
             return {}, "noop", "no updates required"
         else:
             return {}, "failed", "process_config_diff failed"
