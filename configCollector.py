@@ -27,6 +27,7 @@ class configCollector():
         os.environ['APP_DIR'] = cwdir
 
     def getConfig(self):
+        full_config = {}
         d = DeviceConfig(
             self.device_data['device']['hostname'],
             self.device_data['device']['username'],
@@ -140,6 +141,21 @@ class configCollector():
                                 continue
 
         entities_to_update = interfaces_to_update + srs_to_update
+        full_config = self.device_data
+        full_config["device"]["configuration"] = []
+        int_dict = {}
+        int_dict["interfaces"] = []
+        sr_dict = {}
+        sr_dict["static_routes"] = []
+        for i in intf_entities:
+            int_dict["interfaces"].append(i.dict())
+
+        for s in sr_entities:
+            sr_dict["static_routes"].append(s.dict())
+
+        full_config["device"]["configuration"].append(int_dict)
+        full_config["device"]["configuration"].append(sr_dict)
+
         if len(entities_to_update) > 0:
             intf_val = []
             sr_val = []
@@ -151,7 +167,6 @@ class configCollector():
                 sr_val = StaticRouteValues(static_routes=srs_to_update)
                 update_config.append(sr_val)
 
-            print(update_config)
             if len(update_config) > 0:
                 device_auth = DeviceAuth(
                     hostname=self.device_data["device"]["hostname"],
@@ -162,17 +177,22 @@ class configCollector():
                     configuration=update_config
                 )
                 device = Device(device=device_auth)
-                return device.dict(), "success", "updates found"
+                return device.dict(), "success", "updates found", full_config
             else:
-                return {}, "failed", "empty configuration list"
+                return {}, "failed", "empty configuration list", full_config
         else:
-            return {}, "noop", "no updates found"
+            return {}, "noop", "no updates found", full_config
 
     def process_config_diff(self):
-        device_diff, status, msg = self.getConfig()
+        device_diff, status, msg, full_config = self.getConfig()
         headers = {"Content-Type": "application/json"}
         redis_ip = os.getenv("REDIS_IP")
         redis_port = os.getenv("REDIS_PORT")
+        r_client = redis_client(redis_ip, redis_port)
+        result = r_client.save_dict(full_config["device"]["hostname"], full_config)
+
+        if result is not True:
+            return {"status": "redis failure"}, "failed", {"message": "redis failed to save the config data"}
 
         if status == "success":
             r = requests.post(
@@ -180,12 +200,7 @@ class configCollector():
                 headers=headers,
                 data=json.dumps(device_diff)
             )
-            r_client = redis_client(redis_ip, redis_port)
-            result = r_client.save_dict(device_diff["device"]["hostname"], device_diff)
-            if result is True:
-                return {"status": r.status_code}, "success", {"message": msg, "device_output": r.text}
-            else:
-                return {"status": "redis failure"}, "failed", {"message": "redis failed to save the config data"}
+            return {"status code": r.status_code}, "success", r.text
         elif status == "noop":
             return {}, "noop", "no updates required"
         else:

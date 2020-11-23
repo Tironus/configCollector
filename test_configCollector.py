@@ -57,8 +57,11 @@ payload = {
 }
 
 if __name__ == "__main__":
-	c = configCollector.configCollector(payload)
-	r1, r2, r3 = c.process_config_diff()
+    c = configCollector.configCollector(payload)
+    try:
+        r1, r2, r3 = c.process_config_diff()
+    except Exception as e:
+        print(e)
 
 print(r1)
 print(r2)
